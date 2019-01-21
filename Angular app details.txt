@@ -1,0 +1,76 @@
+
+
+
+These are the steps to create An Angular APP from Scratch for StandAlone Angular APP:
+
+1. naviagate to the location where you want to create the app. mkdir folder_name(for example mkdir demo)
+2. navigate into the the demo, on the command line type "ng new public", this will create a public folder. 
+3. navigate into the public folder, use ng serve to see if the angular is being served, used ng build --watch to continously 
+serve the angular app. ( if you want to connect to your express app then inside the server.js of your express file 
+paste this app.use(express.static( __dirname + '/public/dist/public' )); this will tell the express to look into the
+public folder of the angular app for the rendering part. once this is done, when you navigate to the localhost:800(your 
+express serving port) you should still see angular page being served up. 
+4. while staying in the public folder, do "ng g s http". this will create two files under src - app folder
+5. put following into the app.module.ts 
+
+import { HttpService } from './http.service';
+import { HttpClientModule } from '@angular/common/http';
+
+
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule,
+    HttpClientModule
+  ],
+  providers: [HttpService],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+
+
+6. put this in the app.component.ts
+
+
+import { HttpService } from './http.service';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  title = 'Arturizmo - Oldest Living Pokemon';
+  constructor(private _httpService: HttpService){}
+}
+
+
+7. put this into http.service.ts
+
+
+import { HttpClient } from '@angular/common/http';
+
+@Injectable()
+export class HttpService {
+
+  constructor(private _http: HttpClient) {
+  	this.getPokemon();
+  	this.getAbility();
+  }
+  	getPokemon(){  " these methods are customized based on the required app"""
+	  	let snorlax = this._http.get('https://pokeapi.co/api/v2/pokemon/143/');
+	  	snorlax.subscribe((data: any) => 
+		  	console.log(`Snorlax has an ability called ${data.abilities[2].ability.name}`, data));
+  	}
+  	getAbility(){
+  		let immunity = this._http.get('https://pokeapi.co/api/v2/ability/17/');
+  		immunity.subscribe((data: any) =>
+  			console.log(`${data.pokemon.length-1} others have this ability! ${data.pokemon[1].pokemon.name} and ${data.pokemon[2].pokemon.name}`, data));
+  	}
+}
+
+
+

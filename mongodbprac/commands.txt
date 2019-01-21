@@ -1,0 +1,8 @@
+
+
+to start the server use mongod
+to start client db use mongo
+
+
+1. Create a database called my_first_db
+use my_first_db
